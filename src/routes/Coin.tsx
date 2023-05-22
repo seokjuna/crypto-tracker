@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useMatch, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Chart from "./Chart";
@@ -6,6 +5,7 @@ import Price from "./Price";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet-async";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -152,11 +152,16 @@ function Coin() {
     const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
         ["info", coinId], () => fetchCoinInfo(coinId));
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
-        ["tickers", coinId], () => fetchCoinTickers(coinId));
+        ["tickers", coinId], () => fetchCoinTickers(coinId), {
+            refetchInterval: 5000
+        });
     const loading = infoLoading || tickersLoading;
 
     return (
         <Container>
+            <Helmet>
+                <title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</title>
+            </Helmet>
             <Header>
                 <Title>{state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
             </Header>
