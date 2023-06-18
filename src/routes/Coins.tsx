@@ -3,8 +3,6 @@ import styled from "styled-components";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoins } from "../api";
 import { Helmet } from "react-helmet-async";
-import { useSetRecoilState } from "recoil";
-import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -17,6 +15,11 @@ const Header = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
+`;
+
+const Title = styled.h1`
+    font-size: 48px;
+    color: ${(props) => props.theme.accentColor};
 `;
 
 const CoinList = styled.ul``;
@@ -46,11 +49,6 @@ const Img = styled.img`
     margin-right: 10px;
 `;
 
-const Title = styled.h1`
-    font-size: 48px;
-    color: ${(props) => props.theme.accentColor};
-`;
-
 const Loader = styled.span`
     text-align: center;
     display: block;
@@ -71,8 +69,6 @@ interface ICoinProps {
 }
 
 function Coins() {
-    const setDarkAtom = useSetRecoilState(isDarkAtom);
-    const toggleDarkATom = () => setDarkAtom((prev) => !prev);
     const { isLoading, data } = useQuery<ICoin[]>(["allCoins"], fetchCoins);
     /*
     const [coins, setCoins] = useState<CoinInterface[]>([]);
@@ -94,7 +90,6 @@ function Coins() {
             </Helmet>
             <Header>
                 <Title>코인</Title>
-                <button onClick={toggleDarkATom}>Toggle Mode</button>
             </Header>
             {isLoading ? (
                 <Loader>Loading...</Loader>
